@@ -1,52 +1,50 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial</title>
+    <title>Minha Página</title>
     <style>
         body {
             background-color: #f0f0f0;
             text-align: center;
+            font-family: Arial, sans-serif;
         }
-
-        .header {
-            background-color: #ccc;
-            padding: 20px;
-        }
-
+        
         .button {
-            background-color: #7ED321;
+            background-color: #4caf50;
             border: none;
             border-radius: 20px;
-            padding: 10px 20px;
             color: white;
-            font-weight: bold;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
             font-size: 16px;
             margin: 10px;
             cursor: pointer;
         }
-
-        .content {
-            margin: 20px;
-            text-align: left;
+        
+        .container {
+            background-color: #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
         }
-
-        .content p {
+        
+        .bold-text {
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <button class="button">Home</button>
-        <button class="button">Sobre</button>
-    </div>
-    <div class="content">
-        <p>Sobre nós:</p>
-        <p>Fazemos programas para ajudar e facilitar o usuário de acordo com sua dificuldade e necessidades.</p>
-        <p>Sobre a API:</p>
-        <p>As nossas APIs são criadas para facilitar, ajudar e expandir a mente do desenvolvedor. Nossas APIs obtêm informações sobre sistemas, imagens e outros programas (As APIs não manipulam os programas).</p>
+    <button class="button" onclick="window.location.href='index.html'">Home</button>
+    <button class="button" onclick="window.location.href='sobre.html'">About</button>
+    
+    <div class="container">
+        <p class="bold-text">About Us:</p>
+        <p>We create programs to assist and facilitate the user according to their difficulties and needs.</p>
+        
+        <p class="bold-text">About the API:</p>
+        <p>Our APIs are designed to facilitate, assist, and expand the developer's mind. Our APIs obtain information about systems, images, and other programs (APIs do not manipulate programs).</p>
     </div>
 </body>
 </html>
