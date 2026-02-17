@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Painel Financeiro</title>
+<style>
+
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:radial-gradient(circle at top,#111827,#0f1117);
+    color:#e6edf3;
+    overflow-x:hidden;
+}
+
+header{
+    padding:20px;
+    text-align:center;
+    font-size:24px;
+    background:#161b22;
+    border-bottom:1px solid #2a2f3a;
+    letter-spacing:1px;
+    transition:0.3s;
+}
+
+.search-box{
+    padding:20px;
+    text-align:center;
+}
+
+input{
+    width:60%;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    background:#1e232d;
+    color:#fff;
+    font-size:14px;
+    transition:0.3s;
+}
+
+input:focus{
+    outline:none;
+    box-shadow:0 0 20px rgba(88,166,255,0.4);
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px;
+    padding:30px;
+    perspective:1200px;
+}
+
+.card{
+    background:linear-gradient(145deg,#161b22,#1c212c);
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    width:300px;
+    height:300px;
+    background:radial-gradient(circle,rgba(88,166,255,0.25),transparent 70%);
+    top:-150px;
+    left:-150px;
+    transition:0.3s;
+}
+
+.card:hover{
+    box-shadow:0 35px 60px rgba(0,0,0,0.7);
+}
+
+.field{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    transition:0.2s;
+}
+
+.field:hover{
+    transform:translateX(4px);
+}
+
+.label{
+    color:#8b949e;
+}
+
+.value{
+    color:#58a6ff;
+}
+
+.section-title{
+    margin-top:20px;
+    margin-bottom:10px;
+    font-weight:bold;
+    color:#7affcf;
+    letter-spacing:1px;
+}
+
+ul{
+    padding-left:18px;
+}
+
+li{
+    margin-bottom:6px;
+    transition:0.2s;
+}
+
+li:hover{
+    transform:translateX(5px);
+    color:#7affcf;
+}
+
+@media(max-width:900px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+.card{
+    position:relative;
+    background:rgba(22,27,34,0.9);
+    border-radius:20px;
+    border:1px solid rgba(120,180,170,0.15);
+    overflow:hidden;
+}
+
+/* LUZ NOS CANTOS */
+.card::before,
+.card::after{
+    content:"";
+    position:absolute;
+    width:180px;
+    height:180px;
+    pointer-events:none;
+    transition:0.3s ease;
+    opacity:0.5;
+}
+
+.card::before{
+    top:-60px;
+    left:-60px;
+    background:radial-gradient(circle,
+        rgba(120,255,220,0.25),
+        transparent 70%);
+}
+
+.card::after{
+    bottom:-60px;
+    right:-60px;
+    background:radial-gradient(circle,
+        rgba(150,200,190,0.2),
+        transparent 70%);
+}
+
+.card:hover::before,
+.card:hover::after{
+    opacity:0.9;
+}
+
+.card:hover::before{
+    transform:translate(var(--shiftX,0), var(--shiftY,0));
+    filter:hue-rotate(calc(var(--hueShift,0) * 1deg));
+}
+
+.card:hover::after{
+    transform:translate(calc(var(--shiftX,0) * -1), calc(var(--shiftY,0) * -1));
+    filter:hue-rotate(calc(var(--hueShift,0) * 1deg));
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>Painel Financeiro</header>
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Pesquisar qualquer informação...">
+</div>
+
+<div class="grid">
+
+<div class="card">
+
+<div id="Bruto" style="font-size:26px;color:#7affcf;margin-bottom:15px;"></div>
+
+<div class="field"><span class="label">Liquidez</span><span id="Liquidez" class="value searchable"></span></div>
+<div class="field"><span class="label">Retirada</span><span id="Retirada" class="value searchable"></span></div>
+<div class="field"><span class="label">Juros</span><span id="juros" class="value searchable"></span></div>
+<div class="field"><span class="label">Desconto</span><span id="Desconto" class="value searchable"></span></div>
+<div class="field"><span class="label">Status</span><span id="Status" class="value searchable"></span></div>
+
+<div class="section-title">Atualmente</div>
+<ul id="Atualmente"></ul>
+
+<div class="section-title">Pagamentos</div>
+<ul id="Pago"></ul>
+
+<div class="section-title">Atribuição</div>
+<ul id="Atribução"></ul>
+
+</div>
+
+<div class="card">
+
+<div class="section-title">Operação</div>
+<div class="field"><span class="label">Tipo de Operação</span><span id="Operação" class="value searchable"></span></div>
+
+<div class="section-title">Dados do Titular</div>
+<div class="field"><span class="label">Nome</span><span id="Titular" class="value searchable"></span></div>
+<div class="field"><span class="label">CPF</span><span id="CPF" class="value searchable"></span></div>
+<div class="field"><span class="label">Tipo</span><span id="Tipo" class="value searchable"></span></div>
+<div class="field"><span class="label">Conta</span><span id="Conta" class="value searchable"></span></div>
+<div class="field"><span class="label">Agência</span><span id="Agencia" class="value searchable"></span></div>
+
+<div class="section-title">Datas</div>
+<div class="field"><span class="label">Solicitação</span><span id="Solicitação" class="value searchable"></span></div>
+<div class="field"><span class="label">Prazo</span><span id="Prazo" class="value searchable"></span></div>
+
+</div>
+
+</div>
+
+<script>
+
+// URL DO SEU ARQUIVO .att
+const url = "https://raw.githubusercontent.com/gabrielsb317/Serve/refs/heads/main/45fadf68eec1688d123e53ed0f46e0e1.att";
+
+// FUNÇÃO DE PARSE DO ARQUIVO ATT
+function parseCustom(text) {
+    let json = {};
+    let content = text.substring(text.indexOf("{")+1, text.lastIndexOf("}"));
+    let entries = content.split('";');
+    entries.forEach(entry => {
+        let [key, value] = entry.split(':"');
+        if (key && value) {
+            json[key.trim()] = value.replace(/"$/, "");
+        }
+    });
+    return json;
+}
+
+// FUNÇÃO PARA FORMATAR DATAS
+function formatDate(str){
+    let [d,h] = str.split(";");
+    if(!h) return d;
+    return d + " " + h.slice(0,2) + ":" + h.slice(2,4) + ":" + h.slice(4);
+}
+
+// FUNÇÃO PARA CARREGAR OS DADOS
+async function loadData(){
+    try {
+        const response = await fetch(url+"?t="+Date.now());
+        const text = await response.text();
+        const data = parseCustom(text);
+
+        // CAMPOS SIMPLES
+        const simpleKeys = [
+            "Bruto","Liquidez","Retirada","juros","Desconto",
+            "Status","Operação","Titular","CPF","Tipo",
+            "Conta","Agencia"
+        ];
+        simpleKeys.forEach(key => {
+            const el = document.getElementById(key);
+            if(el){
+                if(["Bruto","Liquidez","Retirada"].includes(key))
+                    el.textContent = "R$ " + data[key];
+                else if(key==="juros")
+                    el.textContent = data[key] + "%";
+                else
+                    el.textContent = data[key];
+            }
+        });
+
+        // LISTAS
+        document.getElementById("Atualmente").innerHTML =
+            data["Atualmente"].split(";").map(v => "<li class='searchable'>R$ "+v+"</li>").join("");
+
+        document.getElementById("Pago").innerHTML =
+            data["Pago"].split(",").map(p => {
+                let [d,h,j] = p.split(";");
+                return "<li class='searchable'>" + formatDate(d+";"+h) + " - "+j+"%</li>";
+            }).join("");
+
+        document.getElementById("Atribução").innerHTML =
+            data["Atribução"].split(";").map(v => "<li class='searchable'>"+v+"</li>").join("");
+
+        // DATAS
+        document.getElementById("Solicitação").textContent = formatDate(data["Solicitação"]);
+        document.getElementById("Prazo").textContent = formatDate(data["Prazo"]);
+
+    } catch (err) {
+        console.error("Erro ao carregar dados:", err);
+    }
+}
+
+// CHAMA UMA VEZ e atualiza a cada 10s
+loadData();
+setInterval(loadData,10000);
+
+// PESQUISA
+document.getElementById("search").addEventListener("input", function(){
+    const term = this.value.toLowerCase();
+    const items = document.querySelectorAll(".searchable, .value");
+
+    items.forEach(el => {
+        if(el.textContent.toLowerCase().includes(term)){
+            el.parentElement.style.display = "";
+            el.style.background = "";
+        } else {
+            if(term==="") {
+                el.parentElement.style.display = "";
+                el.style.background = "";
+            } else {
+                el.parentElement.style.display = "none";
+            }
+        }
+    });
+});
+
+// EFEITO 3D PESO NO CARD
+document.querySelectorAll(".card").forEach(card => {
+
+    card.addEventListener("mousemove", e => {
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = -(y - centerY) / 100;
+        const rotateY = (x - centerX) / 100;
+
+        card.style.transform = `
+            rotateX(${rotateX}deg)
+            rotateY(${rotateY}deg)
+            scale(1.03)
+        `;
+
+        // brilho acompanha o mouse
+        card.style.setProperty('--mouse-x', x + "px");
+        card.style.setProperty('--mouse-y', y + "px");
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+        card.style.transform = "rotateX(0) rotateY(0) scale(1)";
+    });
+
+});
+
+document.querySelectorAll(".card").forEach(card=>{
+
+    card.addEventListener("mousemove",e=>{
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const before = card.querySelector(":scope::before");
+    });
+
+    card.addEventListener("mousemove",function(e){
+
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        this.style.setProperty("--mx", x+"px");
+        this.style.setProperty("--my", y+"px");
+
+        this.querySelectorAll("*");
+
+        this.style.setProperty("--shiftX", (x-rect.width/2)/10+"px");
+        this.style.setProperty("--shiftY", (y-rect.height/2)/10+"px");
+
+        this.style.setProperty("--hueShift", Date.now()/50);
+    });
+
+});
+
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+let w, h;
+function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let hue = 170;
+
+function animate(){
+    ctx.clearRect(0,0,w,h);
+
+    hue += 0.2;
+
+    let grad1 = ctx.createRadialGradient(0,0,0,0,0,400);
+    grad1.addColorStop(0, `hsla(${hue},40%,55%,0.08)`);
+    grad1.addColorStop(1, "transparent");
+
+    let grad2 = ctx.createRadialGradient(w,h,0,w,h,400);
+    grad2.addColorStop(0, `hsla(${hue+20},25%,60%,0.06)`);
+    grad2.addColorStop(1, "transparent");
+
+    ctx.fillStyle = grad1;
+    ctx.fillRect(0,0,w,h);
+
+    ctx.fillStyle = grad2;
+    ctx.fillRect(0,0,w,h);
+
+    requestAnimationFrame(animate);
+}
+animate();
+
+</script>
+
+</body>
+</html>
