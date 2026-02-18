@@ -152,8 +152,8 @@ li{ margin-bottom:6px; }
 <div class="section-title">Pagamentos</div>
 <ul id="Pago"></ul>
 
-<div class="section-title">Imunidade</div>
-<ul id="Imunidade"></ul>
+<div class="section-title">Atribuição</div>
+<ul id="Atribução"></ul>
 
 </div>
 
@@ -277,8 +277,8 @@ async function loadData(){
             return "<li>"+formatDate(d+";"+h)+" - R$ "+v+"</li>";
         }).join("");
 
-    document.getElementById("Imunidade").innerHTML =
-        data["Imunidade"].split(";")
+    document.getElementById("Atribução").innerHTML =
+        data["Atribução"].split(";")
         .map(v=>"<li>"+v+"</li>").join("");
 
     document.getElementById("Solicitação").textContent =
@@ -378,4 +378,3 @@ animate();
 </script>
 </body>
 </html>
-
