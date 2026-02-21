@@ -67,13 +67,14 @@ input:focus{
 
 /* CARD */
 .card{
-    background:linear-gradient(145deg,#161b22,#1c212c);
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.5);
-    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    background:#161b22cc; /* transparência leve sem blur */
+    padding:20px;
+    border-radius:16px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+    transition:transform .15s ease;
     position:relative;
-    border:1px solid rgba(120,180,170,0.15);
+    border:1px solid rgba(120,255,220,0.15);
+    overflow:hidden;
 }
 
 .card::before,
@@ -141,6 +142,7 @@ li{ margin-bottom:6px; }
 <div id="Bruto" style="font-size:26px;color:#7affcf;margin-bottom:15px;"></div>
 
 <div class="field"><span class="label">Liquidez</span><span id="Liquidez" class="value"></span></div>
+<div class="field"><span class="label">Pendente</span><span id="Pendente" class="value"></span></div>
 <div class="field"><span class="label">Retirada</span><span id="Retirada" class="value"></span></div>
 <div class="field"><span class="label">Juros</span><span id="juros" class="value"></span></div>
 <div class="field"><span class="label">Desconto</span><span id="Desconto" class="value"></span></div>
@@ -251,14 +253,14 @@ async function loadData(){
     const simpleKeys = [
         "Bruto","Liquidez","Retirada","juros","Desconto",
         "Status","Operação","Titular","CPF","Tipo",
-        "Conta","Agencia"
+        "Conta","Agencia","Pendente"
     ];
 
     simpleKeys.forEach(key => {
         const el = document.getElementById(key);
         if(!el) return;
 
-        if(["Bruto","Liquidez","Retirada"].includes(key))
+        if(["Bruto","Liquidez","Retirada","Pendente"].includes(key))
             el.textContent = "R$ " + data[key];
         else if(key==="juros")
             el.textContent = data[key] + "%";
@@ -295,12 +297,20 @@ setInterval(loadData,10000);
 ========================= */
 document.getElementById("search").addEventListener("input",function(){
     const term = this.value.toLowerCase();
-    document.querySelectorAll(".field, li").forEach(el=>{
-        const text = el.textContent.toLowerCase();
-        el.style.display = text.includes(term) || term===""
-            ? ""
-            : "none";
+    document.querySelectorAll(".card").forEach(card=>{
+    card.addEventListener("mousemove", e=>{
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+
+        card.style.transform =
+            `rotateX(${ -y*6 }deg) rotateY(${ x*6 }deg)`;
     });
+
+    card.addEventListener("mouseleave",()=>{
+        card.style.transform="rotateX(0) rotateY(0)";
+    });
+});
 });
 
 /* =========================
@@ -321,9 +331,8 @@ document.querySelectorAll(".card").forEach(card=>{
         card.style.transform =
             `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
 
-        card.style.setProperty("--shiftX",(x-rect.width/2)/10+"px");
-        card.style.setProperty("--shiftY",(y-rect.height/2)/10+"px");
-        card.style.setProperty("--hueShift",hueShift);
+        card.style.setProperty("--mouseX", x+"px");
+card.style.setProperty("--mouseY", y+"px");
     });
 
     card.addEventListener("mouseleave",()=>{
@@ -355,21 +364,38 @@ for(let i=0;i<40;i++){
     });
 }
 
+let mouse = { x: w/2, y: h/2 };
+
+window.addEventListener("mousemove", e=>{
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+
 function animate(){
     ctx.clearRect(0,0,w,h);
 
     bubbles.forEach(b=>{
-        ctx.beginPath();
-        ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
-        ctx.fillStyle="rgba(120,255,220,0.15)";
-        ctx.fill();
 
-        b.y -= b.speed;
-        if(b.y<0){
-            b.y=h;
-            b.x=Math.random()*w;
-        }
-    });
+    let dx = b.x - mouse.x;
+    let dy = b.y - mouse.y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 120){
+        b.x += dx/dist * 1.5;
+        b.y += dy/dist * 1.5;
+    }
+
+    ctx.beginPath();
+    ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(120,255,220,0.15)";
+    ctx.fill();
+
+    b.y -= b.speed;
+    if(b.y<0){
+        b.y=h;
+        b.x=Math.random()*w;
+    }
+});
 
     requestAnimationFrame(animate);
 }
