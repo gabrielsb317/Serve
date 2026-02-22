@@ -54,12 +54,24 @@ input:focus{
 }
 
 /* GRID */
-.grid{
+.grid-top{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:30px;
     padding:30px;
-    perspective:1200px;
+}
+
+@media(max-width:900px){
+    .grid-top{
+        grid-template-columns:1fr;
+    }
+}
+
+.grid-bottom{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:30px;
+    padding:0 30px 30px 30px;
 }
 
 @media(max-width:900px){
@@ -110,6 +122,21 @@ input:focus{
     margin-bottom:8px;
 }
 
+.small-card{
+    width:75%;
+    margin:0 auto;
+    padding:26px;
+    transform:scale(1);
+}
+
+.small-card .field{
+    margin-bottom:16px;
+}
+
+.small-card .section-title{
+    font-size:15px;
+}
+
 .label{ color:#8b949e; }
 .value{ color:#58a6ff; }
 
@@ -136,7 +163,7 @@ li{ margin-bottom:6px; }
 <input type="text" id="search" placeholder="Pesquisar qualquer informação...">
 </div>
 
-<div class="grid">
+<div class="grid-top">
 
 <div class="card">
 
@@ -177,8 +204,121 @@ li{ margin-bottom:6px; }
 <div class="field"><span class="label">Prazo</span><span id="Prazo" class="value"></span></div>
 
 </div>
-
 </div>
+<div class="grid-bottom">
+<!-- =========================
+     CARTÃO 1
+========================= -->
+<div class="card small-card">
+    <div class="section-title">Oportunidade por tempo limitado</div>
+
+    <div class="field">
+        <span class="label">Tipo de Operação</span>
+        <span class="value">Liquidez Imediata</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor</span>
+        <span class="value">R$ 250</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Juros</span>
+        <span class="value">50%</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor a pagar</span>
+        <span class="value">R$ 375</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Prazo</span>
+        <span class="value">Até 95 dias</span>
+    </div>
+    
+    <div class="field">
+        <span class="label">Sem atribuição</span>
+        <span class="value">IOF IR FGC</span>
+    </div>
+    
+</div>
+
+<!-- =========================
+     CARTÃO 2
+========================= -->
+<div class="card small-card">
+    <div class="section-title">Oportunidade por tempo limitado</div>
+
+    <div class="field">
+        <span class="label">Tipo de Operação</span>
+        <span class="value">Liquidez Imediata Meia</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor</span>
+        <span class="value">R$ 150</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Juros</span>
+        <span class="value">40%</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor a pagar</span>
+        <span class="value">R$ 210</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Prazo</span>
+        <span class="value">Até 70 dias</span>
+    </div>
+    
+    <div class="field">
+        <span class="label">Sem atribuição</span>
+        <span class="value">IOF IR FGC</span>
+    </div>
+</div>
+
+<!-- =========================
+     CARTÃO 3
+========================= -->
+<div class="card small-card">
+    <div class="section-title">Oportunidade Especial</div>
+
+    <div class="field">
+        <span class="label">Tipo de Operação</span>
+        <span class="value">Operação Pé de Meia</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor</span>
+        <span class="value">R$ 100</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Juros</span>
+        <span class="value">30%</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Valor a pagar</span>
+        <span class="value">R$ 130</span>
+    </div>
+
+    <div class="field">
+        <span class="label">Prazo</span>
+        <span class="value">Até 60 dias</span>
+    </div>
+    
+    <div class="field">
+        <span class="label">Sem atribuição</span>
+        <span class="value">IOF IR FGC</span>
+    </div>
+</div>
+</div>
+
 <div style="
     max-width:900px;
     margin:40px auto;
@@ -193,7 +333,7 @@ li{ margin-bottom:6px; }
     box-shadow:0 15px 40px rgba(120,255,220,0.08);
     overflow:hidden;
 ">
-
+    
     <h2 style="
         color:#7affcf;
         margin-bottom:15px;
