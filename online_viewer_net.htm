@@ -183,10 +183,15 @@ li{ margin-bottom:6px; }
     max-width:900px;
     margin:40px auto;
     padding:25px;
-    background:linear-gradient(145deg,#161b22,#1c212c);
+    background:linear-gradient(
+        145deg,
+        rgba(22,27,34,0.75),
+        rgba(28,33,44,0.75)
+    );
     border-radius:20px;
-    border:1px solid rgba(120,180,170,0.15);
-    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    border:1px solid rgba(120,255,220,0.15);
+    box-shadow:0 15px 40px rgba(120,255,220,0.08);
+    overflow:hidden;
 ">
 
     <h2 style="
@@ -296,24 +301,40 @@ setInterval(loadData,10000);
 /* =========================
    PESQUISA REAL
 ========================= */
-document.getElementById("search").addEventListener("input",function(){
-    const term = this.value.toLowerCase();
-    document.querySelectorAll(".card").forEach(card=>{
-    card.addEventListener("mousemove", e=>{
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
+const searchInput = document.getElementById("search");
 
-        card.style.transform =
-            `rotateX(${ -y*6 }deg) rotateY(${ x*6 }deg)`;
+searchInput.addEventListener("input", function () {
+
+    const term = this.value.toLowerCase().trim();
+
+    document.querySelectorAll(".card").forEach(card => {
+
+        let foundInCard = false;
+
+        // Seleciona campos e listas dentro do card
+        const elements = card.querySelectorAll(".field, li, .section-title, div");
+
+        elements.forEach(el => {
+
+            const text = el.textContent.toLowerCase();
+
+            if (term === "") {
+                el.style.display = "";
+            } else if (text.includes(term)) {
+                el.style.display = "";
+                foundInCard = true;
+            } else {
+                el.style.display = "none";
+            }
+
+        });
+
+        // Se nada foi encontrado no card inteiro → esconde o card
+        card.style.display = foundInCard || term === "" ? "" : "none";
+
     });
 
-    card.addEventListener("mouseleave",()=>{
-        card.style.transform="rotateX(0) rotateY(0)";
-    });
 });
-});
-
 /* =========================
    EFEITO 3D
 ========================= */
@@ -356,7 +377,7 @@ resize();
 window.addEventListener("resize",resize);
 
 let bubbles=[];
-for(let i=0;i<40;i++){
+for(let i=0;i<100;i++){
     bubbles.push({
         x:Math.random()*w,
         y:Math.random()*h,
