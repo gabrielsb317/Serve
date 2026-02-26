@@ -147,6 +147,19 @@ input:focus{
     color:#7affcf;
 }
 
+.dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#2a2f3a;
+    transition:0.3s;
+}
+
+.dot.active{
+    background:#7affcf;
+    box-shadow:0 0 10px #7affcf;
+    transform:scale(1.2);
+}
 ul{ padding-left:18px; }
 li{ margin-bottom:6px; }
 </style>
@@ -172,6 +185,13 @@ li{ margin-bottom:6px; }
         Próxima Operação
     </button>
 </div>
+<div id="indicator" style="
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-top:12px;
+"></div>
+
 <div class="search-box">
 <input type="text" id="search" placeholder="Pesquisar qualquer informação...">
 </div>
@@ -473,6 +493,7 @@ async function loadData(){
 
     if(operations.length > 0){
         renderData(operations[currentIndex]);
+        updateIndicator();
     }
 }
 
@@ -485,6 +506,7 @@ document.getElementById("nextOperation").addEventListener("click", ()=>{
         currentIndex = 0;
 
     renderData(operations[currentIndex]);
+    updateIndicator();
 });
 
 loadData();
@@ -613,6 +635,23 @@ function animate(){
     requestAnimationFrame(animate);
 }
 animate();
+
+function updateIndicator(){
+
+    const container = document.getElementById("indicator");
+    container.innerHTML = "";
+
+    operations.forEach((_, index)=>{
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+
+        if(index === currentIndex){
+            dot.classList.add("active");
+        }
+
+        container.appendChild(dot);
+    });
+}
 
 </script>
 </body>
