@@ -158,7 +158,20 @@ li{ margin-bottom:6px; }
 <canvas id="bg"></canvas>
 
 <header>Painel Financeiro</header>
-
+<div style="text-align:center; margin-top:15px;">
+    <button id="nextOperation" style="
+        padding:10px 20px;
+        border:none;
+        border-radius:10px;
+        background:#7affcf;
+        color:#0f1117;
+        font-weight:bold;
+        cursor:pointer;
+        transition:0.2s;
+    ">
+        Próxima Operação
+    </button>
+</div>
 <div class="search-box">
 <input type="text" id="search" placeholder="Pesquisar qualquer informação...">
 </div>
@@ -364,37 +377,42 @@ li{ margin-bottom:6px; }
 const url = "https://raw.githubusercontent.com/gabrielsb317/Serve/refs/heads/main/45fadf68eec1688d123e53ed0f46e0e1.att";
 
 /* =========================
-   PARSE DO ARQUIVO
+   PARSE MULTIPLO SUPORTE {}
 ========================= */
-function parseCustom(text) {
-    let json = {};
-    let content = text.substring(text.indexOf("{")+1, text.lastIndexOf("}"));
-    let entries = content.split('";');
-    entries.forEach(entry => {
-        let [key, value] = entry.split(':"');
-        if (key && value) {
-            json[key.trim()] = value.replace(/"$/, "");
-        }
+function parseMultiple(text){
+    const blocks = text.match(/\{[^}]+\}/g);
+    if(!blocks) return [];
+
+    return blocks.map(block=>{
+        let json = {};
+        let content = block.substring(1, block.length-1);
+        let entries = content.split('";');
+
+        entries.forEach(entry=>{
+            let [key,value] = entry.split(':"');
+            if(key && value){
+                json[key.trim()] = value.replace(/"$/, "");
+            }
+        });
+
+        return json;
     });
-    return json;
 }
 
 /* =========================
    FORMATAR DATA
 ========================= */
 function formatDate(str){
+    if(!str) return "";
     let [d,h] = str.split(";");
     if(!h) return d;
     return d + " " + h.slice(0,2)+":"+h.slice(2,4)+":"+h.slice(4);
 }
 
 /* =========================
-   CARREGAR DADOS
+   RENDERIZAR DADOS
 ========================= */
-async function loadData(){
-    const response = await fetch(url+"?t="+Date.now());
-    const text = await response.text();
-    const data = parseCustom(text);
+function renderData(data){
 
     const simpleKeys = [
         "Bruto","Liquidez","Retirada","juros","Desconto",
@@ -402,42 +420,75 @@ async function loadData(){
         "Conta","Agencia","Pendente"
     ];
 
-    simpleKeys.forEach(key => {
+    simpleKeys.forEach(key=>{
         const el = document.getElementById(key);
         if(!el) return;
 
         if(["Bruto","Liquidez","Retirada","Pendente"].includes(key))
-            el.textContent = "R$ " + data[key];
+            el.textContent = "R$ " + (data[key] || "0");
         else if(key==="juros")
-            el.textContent = data[key] + "%";
+            el.textContent = (data[key] || "0") + "%";
         else
-            el.textContent = data[key];
+            el.textContent = data[key] || "";
     });
 
     document.getElementById("Atualmente").innerHTML =
-        data["Atualmente"].split(";")
+        (data["Atualmente"] || "")
+        .split(";")
+        .filter(v=>v)
         .map(v=>"<li>R$ "+v+"</li>").join("");
 
     document.getElementById("Pago").innerHTML =
-        data["Pago"].split(",")
+        (data["Pago"] || "")
+        .split(",")
+        .filter(p=>p)
         .map(p=>{
             let [d,h,v] = p.split(";");
             return "<li>"+formatDate(d+";"+h)+" - R$ "+v+"</li>";
         }).join("");
 
     document.getElementById("Atribução").innerHTML =
-        data["Atribução"].split(";")
+        (data["Atribução"] || "")
+        .split(";")
+        .filter(v=>v)
         .map(v=>"<li>"+v+"</li>").join("");
 
     document.getElementById("Solicitação").textContent =
         formatDate(data["Solicitação"]);
+
     document.getElementById("Prazo").textContent =
         formatDate(data["Prazo"]);
 }
 
+/* =========================
+   CONTROLE MANUAL
+========================= */
+let operations = [];
+let currentIndex = 0;
+
+async function loadData(){
+    const response = await fetch(url+"?t="+Date.now());
+    const text = await response.text();
+    operations = parseMultiple(text);
+
+    if(operations.length > 0){
+        renderData(operations[currentIndex]);
+    }
+}
+
+document.getElementById("nextOperation").addEventListener("click", ()=>{
+
+    if(operations.length <= 1) return;
+
+    currentIndex++;
+    if(currentIndex >= operations.length)
+        currentIndex = 0;
+
+    renderData(operations[currentIndex]);
+});
+
 loadData();
 setInterval(loadData,10000);
-
 /* =========================
    PESQUISA REAL
 ========================= */
