@@ -469,10 +469,38 @@ li{ margin-bottom:6px; }
     <div class="popup" id="popup4">
         <span class="close" onclick="closePopup(4)">✖</span>
         <h2>Que tal 200 reais agora?😏</h2>
-        <p>Solicite agora os seus 200 reais e pague depois.</p>
-        <small>Entre em contato e solicite essa oportunidade.</small>
+        <p>Garanta já R$ 200 e só pague depois!</p>
+        <small>Solicite esta oportunidade entrando em contato conosco.</small>
     </div>
-
+    
+    <div class="popup" id="popup5">
+        <span class="close" onclick="closePopup(5)">✖</span>
+        <h2>Aproveite já essa oportunidade imperdível!🚀</h2>
+        <p>Solicite imediatamente o valor de R$ 100 e efetue o pagamento posteriormente.</p>
+        <small>Entre em contato e garanta já essa oportunidade!</small>
+    </div>
+    
+    <div class="popup" id="popup6">
+        <span class="close" onclick="closePopup(6)">✖</span>
+        <h2>Chance unica de de ter 500 reais no credito💎</h2>
+        <p>Uma vez quitadas todas as dívidas, será concedido o direito de receber R$ 500,00.</p>
+        <small>Solicite já esta oportunidade e receba, adicionalmente, um bônus de 5% de redução nos juros.</small>
+    </div>
+    
+    <div class="popup" id="popup7">
+        <span class="close" onclick="closePopup(7)">✖</span>
+        <h2>Falha ou algum dado incorreto?</h2>
+        <p>Solicite imediatamente o suporte e informe o ocorrido.</p>
+        <small>Entre em contato e garanta já essa oportunidade!</small>
+    </div>
+    
+    <div class="popup" id="popup8">
+        <span class="close" onclick="closePopup(8)">✖</span>
+        <h2>Você é o nosso tesouro mais valioso 💎</h2>
+        <p>Receba bônus, aproveite a redução de juros e conquiste limites maiores.</p>
+        <small>Solicite já esta oportunidade.</small>
+    </div>
+    
 </div>
 </div>
 
@@ -752,7 +780,7 @@ function closePopup(num){
 
     currentPopup++;
 
-    if(currentPopup <= 4){
+    if(currentPopup <= 8){
         setTimeout(()=>showPopup(currentPopup),400);
     }else{
         document.getElementById("popupContainer").style.display="none";
