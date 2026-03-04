@@ -160,6 +160,63 @@ input:focus{
     box-shadow:0 0 10px #7affcf;
     transform:scale(1.2);
 }
+/* POPUP OVERLAY FUNDO ESCURO */
+.popup-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.65); /* escurece fundo */
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+/* POPUP MAIOR */
+.popup{
+    display:none;
+    width:600px;
+    max-width:90%;
+    background:rgba(30,35,45,0.95);
+    border-radius:20px;
+    padding:40px;
+    position:relative;
+    text-align:center;
+    border:1px solid rgba(120,255,220,0.25);
+    box-shadow:0 25px 60px rgba(0,0,0,0.7);
+    animation:fadeIn 0.3s ease;
+}
+
+.popup h2{
+    color:#7affcf;
+    font-size:22px;
+    margin-bottom:20px;
+}
+
+.popup p{
+    color:#e6edf3;
+    font-size:16px;
+    margin-bottom:15px;
+}
+
+.popup small{
+    color:#8b949e;
+    font-size:13px;
+}
+
+.close{
+    position:absolute;
+    top:15px;
+    right:20px;
+    cursor:pointer;
+    font-size:18px;
+    color:#7affcf;
+}
+
+/* animação suave */
+@keyframes fadeIn{
+    from{opacity:0; transform:scale(0.9);}
+    to{opacity:1; transform:scale(1);}
+}
 ul{ padding-left:18px; }
 li{ margin-bottom:6px; }
 </style>
@@ -386,7 +443,37 @@ li{ margin-bottom:6px; }
         <br><br>
         As informações podem levar até 2 horas para serem atualizadas.
     </p>
+    <!-- POPUPS -->
+<div class="popup-overlay" id="popupContainer">
 
+    <div class="popup" id="popup1">
+        <span class="close" onclick="closePopup(1)">✖</span>
+        <h2>Seja bem-vindo ao o melhor visualizador de ações e dividas que voce poderá ter🎉🍾</h2>
+        <p>O visualizador noxtras não pertence a nenhuma corretora, agencia, banco ou investidora. todas as ações são privadas.</p>
+    </div>
+
+    <div class="popup" id="popup2">
+        <span class="close" onclick="closePopup(2)">✖</span>
+        <h2>Pague menos juros!🤩</h2>
+        <p>Pague ate 12% a menos de juros por divida pega.</p>
+        <small>Entre em contato e solicite essa oportunidade</small>
+    </div>
+
+    <div class="popup" id="popup3">
+        <span class="close" onclick="closePopup(3)">✖</span>
+        <h2>Você terá direito de 450 reais!⛱️</h2>
+        <p>Apos o pagamento de sua divida você podera pegar ate 450 reais.</p>
+        <small>Uma redução de ate 14% nos juros pagos</small>
+    </div>
+
+    <div class="popup" id="popup4">
+        <span class="close" onclick="closePopup(4)">✖</span>
+        <h2>Que tal 200 reais agora?😏</h2>
+        <p>Solicite agora os seus 200 reais e pague depois.</p>
+        <small>Entre em contato e solicite essa oportunidade.</small>
+    </div>
+
+</div>
 </div>
 
 <script>
@@ -652,7 +739,30 @@ function updateIndicator(){
         container.appendChild(dot);
     });
 }
+let currentPopup = 1;
 
+function showPopup(num){
+    document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
+    document.getElementById("popup"+num).style.display="block";
+}
+
+function closePopup(num){
+    const popup = document.getElementById("popup"+num);
+    popup.style.display="none";
+
+    currentPopup++;
+
+    if(currentPopup <= 4){
+        setTimeout(()=>showPopup(currentPopup),400);
+    }else{
+        document.getElementById("popupContainer").style.display="none";
+        document.body.style.overflow = "auto"; // libera scroll
+    }
+}
+window.addEventListener("load", ()=>{
+    document.body.style.overflow = "hidden"; // trava scroll
+    showPopup(1);
+});
 </script>
 </body>
 </html>
