@@ -501,6 +501,20 @@ li{ margin-bottom:6px; }
         <small>Solicite já esta oportunidade.</small>
     </div>
     
+    <div class="popup" id="popup9">
+        <span class="close" onclick="closePopup(9)">✖</span>
+        <h2>Você acaba de receber da Noxtras uma proposta especial e única 🫵🫶</h2>
+        <p>Receba R$ 500,00 direto na sua conta, com juros máximos de 20% e prazo de até 16 meses. Seja feliz!</p>
+        <small>Solicite já esta oportunidade.</small>
+    </div>
+    
+    <div class="popup" id="popup10">
+        <span class="close" onclick="closePopup(10)">✖</span>
+        <h2>Agora e a sua vez💎</h2>
+        <p>Sua última chance de aderir ao plano BOSS e garantir uma redução de 10% em todos os juros aplicados.</p>
+        <small>Solicite já esta oportunidade.</small>
+    </div>
+    
 </div>
 </div>
 
@@ -780,7 +794,7 @@ function closePopup(num){
 
     currentPopup++;
 
-    if(currentPopup <= 8){
+    if(currentPopup <= 10){
         setTimeout(()=>showPopup(currentPopup),400);
     }else{
         document.getElementById("popupContainer").style.display="none";
@@ -794,3 +808,4 @@ window.addEventListener("load", ()=>{
 </script>
 </body>
 </html>
+
